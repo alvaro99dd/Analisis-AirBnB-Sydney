@@ -9,7 +9,7 @@ from streamlit_folium import st_folium
 import geopandas as gpd
 from streamlit.components.v1 import html
 
-st.set_page_config(page_title="Airbnb Sydney", page_icon=":passenger_ship:",layout="wide") #configuración de la página
+st.set_page_config(page_title="Airbnb Sydney", page_icon=":house:",layout="wide") #configuración de la página
 
 #Cargar datos
 listings = pd.read_csv("recursos/listings_clean.csv")
@@ -26,9 +26,33 @@ def clean_outliers(df_aux, column: str):
 
 st.title("Análisis de pisos en Airbnb en Sydney")
 st.sidebar.title("Opciones de la tabla")
-pestaña = st.sidebar.radio("Selecciona una pestaña:", ("Inicio", "Importancia del Precio", "Importancia del Vecindario", "Power BI"))
+pestaña = st.sidebar.radio("Selecciona una pestaña:", ("Inicio", "Datos usados", "Importancia del Precio", "Importancia del Vecindario", "Importancia del rating"))
 
 if pestaña == "Inicio":
+    st.subheader("Análisis exhaustivo para definir en qué tipo de propiedades y en qué barrios es más rentable invertir en Sydney")
+    cols = st.columns(2)
+    with cols[0]:
+        st.image("https://content.r9cdn.net/rimg/dimg/12/98/b1e36771-city-2258-163f4d7f814.jpg?crop=true&width=1020&height=498")
+        st.caption("Fuente: Kayak.es")
+    with cols[1]:
+        with st.expander("Resumen análisis"):
+            st.write('''
+            A lo largo de esta aplicación observaremos
+            las diferentes variables que afectan no sólo al precio
+            medio de la vivienda sino también a sus puntuaciones en la aplicación
+            AirBnB, sirviendo como guía o consejos para nuestros clientes
+            a la hora de invertir en la zona de Sydney.
+            ''')
+            col1, col2, col3 = st.columns([1,2,1])
+            with col2:
+                st.image("https://www.eleconomista.es/finanzas-personales/wp-content/uploads/2023/12/Untitled-1-1.png", width=300)
+                st.caption("Fuente: El Economista")
+            # st.markdown("##### Datos analizados")
+            # st.markdown("##### Precio medio")
+            # st.markdown("##### Vecindarios")
+            # st.markdown("##### Rating")
+
+elif pestaña == "Datos usados":
     tabsInicio = st.tabs(["Datos Cargados", "Mapa Sydney"])
 
     with tabsInicio[0]:
@@ -217,19 +241,25 @@ elif pestaña == "Importancia del Vecindario":
         fig.update_layout(legend=dict(orientation="h", y=1.06, x=0, xanchor='left'))
         st.plotly_chart(fig, use_container_width=True)
     with tabsVecindario[2]:
-        #Grafica de disponibilidad de propiedades por vecindario
         calendar_data = pd.read_csv("recursos/calendar.csv", low_memory=False)
         calendar_data = pd.merge(listings, calendar_data, left_on="id", right_on="listing_id", how="left")
         calendar_data = calendar_data.groupby(["neighbourhood", "date"])["available"].value_counts().unstack()
         calendar_data["available_ratio"] = np.round(calendar_data["t"] / (calendar_data["t"] + calendar_data["f"]) * 100, 2)
         calendar_data = calendar_data.reset_index()
         calendar_data = clean_outliers(calendar_data, "available_ratio")
-        calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
+        
+        filt = st.checkbox("Mostrar todos los vecindarios", value=False)
+        if filt:
+            pass
+        else:
+            calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
+        #Grafica de disponibilidad de propiedades por vecindario
         fig = px.scatter(calendar_data, x= "date", y="available_ratio", title="Disponibilidad de propiedades por vecindario"
                     , color="neighbourhood"
                     , color_continuous_scale="Plasma"
                     , labels={"available_ratio": "Ratio de disponibilidad", "date": "Fecha", "neighbourhood": "Vecindario"})
         st.plotly_chart(fig, use_container_width=True)
+
 
     with tabsVecindario[3]:
         # Gráfico de barras para mostrar el precio medio por puntuación de ubicación
@@ -265,17 +295,8 @@ elif pestaña == "Importancia del Vecindario":
         fig.update_traces(width=0.7, boxmean=True)
         st.plotly_chart(fig, use_container_width=True)
         df_aux.drop(columns=["color"], inplace=True)    
-elif pestaña == "Power BI":
+elif pestaña == "Importancia del rating":
     codigo_iframe = '''<iframe title="Panel_Rating_AirBnB" width="100%" height="100%"
     src="https://app.powerbi.com/view?r=eyJrIjoiZTc4YTljOWYtNDMyMC00YjNhLWI3ZTQtYTA3MGE0ZWVkYjMzIiwidCI6IjhhZWJkZGI2LTM0MTgtNDNhMS1hMjU1LWI5NjQxODZlY2M2NCIsImMiOjl9"
     frameborder="0" allowFullScreen="true" style="position:absolute; top:0; left:0; bottom:0; right:0;"></iframe>'''
     html(codigo_iframe, width=1320, height=1250, scrolling=True)
-
-
-
-
-
-
-
-#Graficos Álvaro
-
