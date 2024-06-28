@@ -24,12 +24,12 @@ def clean_outliers(df_aux, column: str):
     return df_aux
 
 
-st.title("Análisis de pisos en Airbnb en Sydney")
+st.title("Análisis exploratorio de Airbnbs en Sydney")
 st.sidebar.title("Opciones de la tabla")
 pestaña = st.sidebar.radio("Selecciona una pestaña:", ("Inicio", "Datos usados", "Importancia del Precio", "Importancia del Vecindario", "Importancia del rating"))
 
 if pestaña == "Inicio":
-    st.subheader("Análisis exhaustivo para definir en qué tipo de propiedades y en qué barrios es más rentable invertir en Sydney")
+    st.subheader("Investigación exhaustiva para decidir en qué propiedades y barrios es más rentable invertir")
     cols = st.columns(2)
     with cols[0]:
         st.image("https://content.r9cdn.net/rimg/dimg/12/98/b1e36771-city-2258-163f4d7f814.jpg?crop=true&width=1020&height=498")
