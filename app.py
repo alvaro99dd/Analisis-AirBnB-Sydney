@@ -5,6 +5,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 
 import folium
+from folium.plugins import FastMarkerCluster
 from streamlit_folium import st_folium
 import geopandas as gpd
 from streamlit.components.v1 import html
@@ -66,20 +67,25 @@ elif pestaña == "Datos usados":
             st.subheader("Datos Preprocesados")
             st.dataframe(listings)
     with tabsInicio[1]:
-        #Mapa de propiedades en Sydney
+        @st.cache_data
+        def create_map(locations):
+            map1 = folium.Map(location=[-33.86785, 151.20732], zoom_start=11.5)
+            FastMarkerCluster(data=locations).add_to(map1)
+            return map1
+
         # Creamos una lista con las latitudes y longitudes de las propiedades en Sydney
         lats2018 = listings['latitude'].tolist()
         lons2018 = listings['longitude'].tolist()
         locations = list(zip(lats2018, lons2018))
 
-        map1 = folium.Map(location=[-33.86785, 151.20732], zoom_start=11.5)
-        folium.plugins.FastMarkerCluster(data=locations).add_to(map1)
+        # Creamos el mapa utilizando la función cacheada
+        map1 = create_map(locations)
 
         # Mostramos el mapa en Streamlit
         st_folium(map1, width='100%')
 
 elif pestaña == "Importancia del Precio":
-    tabsPrecio = st.tabs(["Segun propiedad", "Segun valoraciones", "Segun comodidades", "Segun barrio"])
+    tabsPrecio = st.tabs(["Según propiedad", "Según valoraciones", "Según comodidades", "Según barrio"])
     with tabsPrecio[0]:
         cols = st.columns(2)
         with cols[0]:
@@ -185,7 +191,7 @@ elif pestaña == "Importancia del Precio":
         fig.update_traces(hovertemplate='Barrio: %{label}<br>Precio Medio (€): %{value}')
         st.plotly_chart(fig, use_container_width=True)
 elif pestaña == "Importancia del Vecindario":
-    tabsVecindario = st.tabs(["Propiedades segun vecindario", "Distribución habitaciones", "Disponibilidad", "Segun puntuación de ubicación"])
+    tabsVecindario = st.tabs(["Propiedades según vecindario", "Distribución habitaciones", "Disponibilidad", "Según puntuación de ubicación"])
     with tabsVecindario[0]:
         cols = st.columns(2)
         with cols[0]:
@@ -299,7 +305,7 @@ elif pestaña == "Importancia del Vecindario":
         st.plotly_chart(fig, use_container_width=True)
         df_aux.drop(columns=["color"], inplace=True)    
 elif pestaña == "Importancia del rating":
-    codigo_iframe = '''<iframe title="Panel_Rating_AirBnB" width="100%" height="100%"
-    src="https://app.powerbi.com/view?r=eyJrIjoiZTc4YTljOWYtNDMyMC00YjNhLWI3ZTQtYTA3MGE0ZWVkYjMzIiwidCI6IjhhZWJkZGI2LTM0MTgtNDNhMS1hMjU1LWI5NjQxODZlY2M2NCIsImMiOjl9"
-    frameborder="0" allowFullScreen="true" style="position:absolute; top:0; left:0; bottom:0; right:0;"></iframe>'''
-    html(codigo_iframe, width=1320, height=1250, scrolling=True)
+    codigo_iframe = '''<iframe title="Panel_Rating_AirBnB" width="1320" height="1240"
+    src="https://app.powerbi.com/view?r=eyJrIjoiNTQzNzU5MmQtNjc0Zi00ZTA4LWEwMjktZmQ5MTYwMjA5ODRmIiwidCI6IjhhZWJkZGI2LTM0MTgtNDNhMS1hMjU1LWI5NjQxODZlY2M2NCIsImMiOjl9"
+    frameborder="0" allowFullScreen="true"></iframe>'''
+    html(codigo_iframe, width=1320, height=1250)
