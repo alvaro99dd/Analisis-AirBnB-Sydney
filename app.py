@@ -54,14 +54,17 @@ if pestaña == "Inicio":
 
 elif pestaña == "Datos usados":
     tabsInicio = st.tabs(["Datos Cargados", "Mapa Sydney"])
-
     with tabsInicio[0]:
-        st.subheader("Datos Preprocesados")
-        st.dataframe(listings)
-        df = pd.DataFrame(data=listings, columns=['neighbourhood', 'price_eur', 'room_type', 'property_type',
-                                                'number_of_reviews', 'review_scores_rating', 'amenities', 'accommodates', 'review_scores_location', 'bedrooms'])
-        st.subheader("Datos Analizados")
-        st.dataframe(df)
+        filtrotabla = st.checkbox("Mostrar datos analizados", value=False)
+        if filtrotabla:
+            df = pd.DataFrame(data=listings, columns=['neighbourhood', 'price_eur', 'room_type', 'property_type',
+            'number_of_reviews', 'review_scores_rating', 'amenities', 'accommodates', 'review_scores_location', 'bedrooms'])
+            st.subheader("Datos Analizados")
+            st.dataframe(df)
+        else:
+            
+            st.subheader("Datos Preprocesados")
+            st.dataframe(listings)
     with tabsInicio[1]:
         #Mapa de propiedades en Sydney
         # Creamos una lista con las latitudes y longitudes de las propiedades en Sydney
