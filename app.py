@@ -122,7 +122,7 @@ elif pestaña == "Importancia del Precio":
             )
             st.plotly_chart(fig, use_container_width=True)
     with tabsPrecio[1]:
-        # Mapa de propiedades por precio y con mas de 10 reseñas
+        # Mapa de propiedades por Precio que tengan mas de 10 Reseñas
         df_filtered = listings.copy()
         df_filtered['review_scores_rating'] = listings[listings["number_of_reviews"] > 10]["review_scores_rating"]
 
@@ -136,7 +136,7 @@ elif pestaña == "Importancia del Precio":
         animation_frame="review_scores_rating",
         zoom=9, mapbox_style="open-street-map",
         color_continuous_scale="viridis",
-        title="Propiedades por Precio y con mas de 10 Reseñas", range_color=[0, 500],
+        title="Propiedades por Precio que tengan mas de 10 Reseñas", range_color=[0, 500],
         labels={"price_eur": "Precio (EUR)", "review_scores_rating": "Valoración Total"},
         height=800)
         st.plotly_chart(fig, use_container_width=True)
@@ -158,7 +158,7 @@ elif pestaña == "Importancia del Precio":
 
         result_df = pd.merge(mean_price_amenities, count_properties_amenities, on='total_amenities')
 
-        fig = px.scatter(result_df, x='total_amenities', y='count_properties', color="mean_price", size="count_properties", title='Numero de propiedades por total de comodidades', range_color=[0, 500],
+        fig = px.scatter(result_df, x='total_amenities', y='count_properties', color="mean_price", size="count_properties", title='Numero de propiedades por total de comodidades y precio medio', range_color=[0, 500],
                         labels={'mean_price': 'Precio Medio(€)', 'count_properties': 'Numero de propiedades', 'total_amenities': 'Total de comodidades'}, color_continuous_scale='Plasma')
         fig.update_layout(
             xaxis_title='Total de comodidades',
