@@ -60,10 +60,6 @@ def inicio():
             col1, col2, col3 = st.columns([1,2,1])
             with col2:
                 st.image("https://www.eleconomista.es/finanzas-personales/wp-content/uploads/2023/12/Untitled-1-1.png", width=300)
-            # st.markdown("##### Datos analizados")
-            # st.markdown("##### Precio medio")
-            # st.markdown("##### Vecindarios")
-            # st.markdown("##### Rating")
 
 def datos_usados():
     tabsInicio = st.tabs(["Datos Cargados"])
