@@ -31,9 +31,9 @@ def change_page(seleccion):
             inicio()
         case "Datos usados":
             datos_usados()
-        case "Importancia del precio":
+        case "Importancia del Precio":
             precio()
-        case "Importancia del vecindario":
+        case "Importancia del Vecindario":
             vecindario()
         case "Importancia del rating":
             rating()
@@ -41,8 +41,6 @@ def change_page(seleccion):
 st.title("Análisis exploratorio de Airbnbs en Sydney")
 st.sidebar.title("Opciones de la tabla")
 pestaña = st.sidebar.radio("Selecciona una pestaña:", ("Inicio", "Datos usados", "Importancia del Precio", "Importancia del Vecindario", "Importancia del rating"))
-
-change_page(pestaña)
 
 def inicio():
     st.subheader("Investigación exhaustiva para decidir en qué propiedades y barrios es más rentable invertir")
@@ -192,29 +190,28 @@ def vecindario():
     tabsVecindario = st.tabs(["Propiedades según vecindario", "Distribución habitaciones", "Disponibilidad", "Según puntuación de ubicación"])
     with tabsVecindario[0]:
         cols = st.columns(2)
-        with cols[0]:
-            st.markdown("<br/>", unsafe_allow_html=True)
-            # Gráfico de barras para mostrar el top 10 de vecindarios con más propiedades
-            feq=listings['neighbourhood'].value_counts(ascending=False).head(10) # Calculamos el top 10 de vecindarios con más propiedades
-            colors = ['#FF3131' if i < 4 else '#36454F' for i in range(len(feq))] # Destacamos el top 4
-            # Creamos y mostramos el gráfico
-            fig = feq.plot.barh(figsize=(10, 5), color=colors, width=1, subplots=True)
-            plt.title("Top 10 vecindarios con más propiedades", fontsize=20)
-            plt.xlabel('Número de propiedades', fontsize=12)
-            plt.ylabel('', fontsize=12)
+        st.markdown("<br/>", unsafe_allow_html=True)
+        # Gráfico de barras para mostrar el top 10 de vecindarios con más propiedades
+        feq=listings['neighbourhood'].value_counts(ascending=False).head(10) # Calculamos el top 10 de vecindarios con más propiedades
+        colors = ['#FF3131' if i < 4 else '#36454F' for i in range(len(feq))] # Destacamos el top 4
+        # Creamos y mostramos el gráfico
+        fig = feq.plot.barh(figsize=(10, 5), color=colors, width=1, subplots=True)
+        plt.title("Top 10 vecindarios con más propiedades", fontsize=20)
+        plt.xlabel('Número de propiedades', fontsize=12)
+        plt.ylabel('', fontsize=12)
 
-            st.pyplot(plt)
-        with cols[1]:
-            #Tipo de propiedades según el top 4 de vecindarios
-            # Creamos un dataframe auxiliar con el top 4 visto anteriormente
-            df_aux = listings[(listings['neighbourhood'] == "Sydney") | (listings['neighbourhood'] == "Waverley") | (listings['neighbourhood'] == "Pittwater") | (listings['neighbourhood'] == "Randwick")]
-            # Mostramos la figura con el top 4 de vecindarios y tipos de propiedades
-            fig = px.histogram(df_aux, x=df_aux['neighbourhood'], color=df_aux['property_type']
-                                , title='Distribución de tipos de propiedades por vecindario', labels={'neighbourhood': 'Vecindario', 'property_type': 'Tipo de propiedad'})
-            fig.update_layout(barmode='group')
-            fig.update_xaxes(categoryorder='total descending', range=(-.5, 3.5))
-            fig.update_yaxes(title='Número de propiedades')
-            st.plotly_chart(fig, use_container_width=True)
+        st.pyplot(plt)
+        # with cols[1]:
+        #     #Tipo de propiedades según el top 4 de vecindarios
+        #     # Creamos un dataframe auxiliar con el top 4 visto anteriormente
+        #     df_aux = listings[(listings['neighbourhood'] == "Sydney") | (listings['neighbourhood'] == "Waverley") | (listings['neighbourhood'] == "Pittwater") | (listings['neighbourhood'] == "Randwick")]
+        #     # Mostramos la figura con el top 4 de vecindarios y tipos de propiedades
+        #     fig = px.histogram(df_aux, x=df_aux['neighbourhood'], color=df_aux['property_type']
+        #                         , title='Distribución de tipos de propiedades por vecindario', labels={'neighbourhood': 'Vecindario', 'property_type': 'Tipo de propiedad'})
+        #     fig.update_layout(barmode='group')
+        #     fig.update_xaxes(categoryorder='total descending', range=(-.5, 3.5))
+        #     fig.update_yaxes(title='Número de propiedades')
+        #     st.plotly_chart(fig, use_container_width=True)
     with tabsVecindario[1]:
         # Mostramos un gráfico con el top 4 de vecindarios con más propiedades
         fig = px.histogram(listings, x=listings['neighbourhood'], color=listings['room_type'], color_discrete_map={'Entire home/apt': '#5DADE2', 'Private room': '#239B56', 'Shared room': '#A6ACAF', "Hotel room" : "#BB8FCE"}
@@ -250,9 +247,12 @@ def vecindario():
     with tabsVecindario[2]:
         calendar_data = pd.read_csv("https://raw.githubusercontent.com/alvaro99dd/Analisis-AirBnB-Sydney/main/Recursos/calendar.zip", low_memory=False)
         calendar_data = pd.merge(listings, calendar_data, left_on="id", right_on="listing_id", how="left")
+        
         calendar_data = calendar_data.groupby(["neighbourhood", "date"])["available"].value_counts().unstack()
         calendar_data["available_ratio"] = np.round(calendar_data["t"] / (calendar_data["t"] + calendar_data["f"]) * 100, 2)
+        
         calendar_data = calendar_data.reset_index()
+        calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
         calendar_data = clean_outliers(calendar_data, "available_ratio")
         
         filt = st.checkbox("Mostrar todos los vecindarios", value=False)
@@ -308,6 +308,8 @@ def rating():
     src="https://app.powerbi.com/view?r=eyJrIjoiNTQzNzU5MmQtNjc0Zi00ZTA4LWEwMjktZmQ5MTYwMjA5ODRmIiwidCI6IjhhZWJkZGI2LTM0MTgtNDNhMS1hMjU1LWI5NjQxODZlY2M2NCIsImMiOjl9"
     frameborder="0" allowFullScreen="true"></iframe>'''
     html(codigo_iframe, width=1320, height=1250)
+
+change_page(pestaña)
 
 # if pestaña == "Inicio":
 #     st.subheader("Investigación exhaustiva para decidir en qué propiedades y barrios es más rentable invertir")
