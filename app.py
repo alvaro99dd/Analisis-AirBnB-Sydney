@@ -249,14 +249,14 @@ def vecindario():
         calendar_data["available_ratio"] = np.round(calendar_data["t"] / (calendar_data["t"] + calendar_data["f"]) * 100, 2)
         
         calendar_data = calendar_data.reset_index()
-        calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
+        # calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
         calendar_data = clean_outliers(calendar_data, "available_ratio")
         
-        # filt = st.checkbox("Mostrar todos los vecindarios", value=False)
-        # if filt:
-        #     pass
-        # else:
-        #     calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
+        filt = st.checkbox("Mostrar todos los vecindarios", value=False)
+        if filt:
+            pass
+        else:
+            calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
         #Grafica de disponibilidad de propiedades por vecindario
         fig = px.scatter(calendar_data, x= "date", y="available_ratio", title="Disponibilidad de propiedades por vecindario"
                     , color="neighbourhood"
