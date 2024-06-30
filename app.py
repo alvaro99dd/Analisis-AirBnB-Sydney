@@ -245,64 +245,64 @@ def vecindario():
                                 , height=800)
         fig.update_layout(legend=dict(orientation="h", y=1.06, x=0, xanchor='left'))
         st.plotly_chart(fig, use_container_width=True)
-    # with tabsVecindario[2]:
-    #     calendar_data = pd.read_csv("https://raw.githubusercontent.com/alvaro99dd/Analisis-AirBnB-Sydney/main/Recursos/calendar.zip", low_memory=False)
-    #     calendar_data = pd.merge(listings, calendar_data, left_on="id", right_on="listing_id", how="left")
+    with tabsVecindario[2]:
+        calendar_data = pd.read_csv("https://raw.githubusercontent.com/alvaro99dd/Analisis-AirBnB-Sydney/main/Recursos/calendar.zip", low_memory=False)
+        calendar_data = pd.merge(listings, calendar_data, left_on="id", right_on="listing_id", how="left")
         
-    #     calendar_data = calendar_data.groupby(["neighbourhood", "date"])["available"].value_counts().unstack()
-    #     calendar_data["available_ratio"] = np.round(calendar_data["t"] / (calendar_data["t"] + calendar_data["f"]) * 100, 2)
+        calendar_data = calendar_data.groupby(["neighbourhood", "date"])["available"].value_counts().unstack()
+        calendar_data["available_ratio"] = np.round(calendar_data["t"] / (calendar_data["t"] + calendar_data["f"]) * 100, 2)
         
-    #     calendar_data = calendar_data.reset_index()
-    #     calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
-    #     calendar_data = clean_outliers(calendar_data, "available_ratio")
+        calendar_data = calendar_data.reset_index()
+        calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
+        calendar_data = clean_outliers(calendar_data, "available_ratio")
         
-    #     # filt = st.checkbox("Mostrar todos los vecindarios", value=False)
-    #     # if filt:
-    #     #     pass
-    #     # else:
-    #     #     calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
-    #     #Grafica de disponibilidad de propiedades por vecindario
-    #     fig = px.scatter(calendar_data, x= "date", y="available_ratio", title="Disponibilidad de propiedades por vecindario"
-    #                 , color="neighbourhood"
-    #                 , color_continuous_scale="Plasma"
-    #                 , labels={"available_ratio": "Ratio de disponibilidad", "date": "Fecha", "neighbourhood": "Vecindario"})
-    #     st.plotly_chart(fig, use_container_width=True)
+        # filt = st.checkbox("Mostrar todos los vecindarios", value=False)
+        # if filt:
+        #     pass
+        # else:
+        #     calendar_data = calendar_data[(calendar_data['neighbourhood'] == "Sydney") | (calendar_data['neighbourhood'] == "Waverley") | (calendar_data['neighbourhood'] == "Pittwater") | (calendar_data['neighbourhood'] == "Randwick")]
+        #Grafica de disponibilidad de propiedades por vecindario
+        fig = px.scatter(calendar_data, x= "date", y="available_ratio", title="Disponibilidad de propiedades por vecindario"
+                    , color="neighbourhood"
+                    , color_continuous_scale="Plasma"
+                    , labels={"available_ratio": "Ratio de disponibilidad", "date": "Fecha", "neighbourhood": "Vecindario"})
+        st.plotly_chart(fig, use_container_width=True)
 
 
-    # with tabsVecindario[3]:
-    #     # Gráfico de barras para mostrar el precio medio por puntuación de ubicación
-    #     df_aux = clean_outliers(df_aux, "price_eur")
-    #     df_aux["real_reviews_location"] = df_aux[df_aux["number_of_reviews"] > 10]["review_scores_location"]
-    #     # colors = ['#FF3131' if i >= 87 else '#36454F' for i in range(len(df_aux["real_reviews_location"]))]
-    #     # Destacamos las propiedades que tienen una puntuación mayor o igual a 4.9
-    #     df_aux['color_condition'] = df_aux['real_reviews_location'].apply(lambda x: 'Mayor o igual a 4.9' if x >= 4.9 else 'Menor a 4.9')
-    #     # Mostramos el histograma con el precio medio por puntuación de ubicación
-    #     fig = px.histogram(df_aux, x="real_reviews_location", y="price_eur"
-    #                         , range_y=[0,500], range_x=[3.5,5], histfunc="avg"
-    #                         , title="Precio medio por puntuación de ubicación"
-    #                         , labels={'real_reviews_location': 'Puntuación de ubicación', 'price_eur': 'Precio en euros'}
-    #                         , color='color_condition'
-    #                         , color_discrete_map={'Mayor o igual a 4.9': '#FF3131', 'Menor a 4.9': '#36454F'} # Mapeo de colores
-    #                         , hover_data={"color_condition": False})  # Ocultamos la información de color_condition en el hover
-    #     fig.update_layout(showlegend=False)
-    #     st.plotly_chart(fig, use_container_width=True)
+    with tabsVecindario[3]:
+        # Gráfico de barras para mostrar el precio medio por puntuación de ubicación
+        df_aux = clean_outliers(df_aux, "price_eur")
+        df_aux["real_reviews_location"] = df_aux[df_aux["number_of_reviews"] > 10]["review_scores_location"]
+        # colors = ['#FF3131' if i >= 87 else '#36454F' for i in range(len(df_aux["real_reviews_location"]))]
+        # Destacamos las propiedades que tienen una puntuación mayor o igual a 4.9
+        df_aux['color_condition'] = df_aux['real_reviews_location'].apply(lambda x: 'Mayor o igual a 4.9' if x >= 4.9 else 'Menor a 4.9')
+        # Mostramos el histograma con el precio medio por puntuación de ubicación
+        fig = px.histogram(df_aux, x="real_reviews_location", y="price_eur"
+                            , range_y=[0,500], range_x=[3.5,5], histfunc="avg"
+                            , title="Precio medio por puntuación de ubicación"
+                            , labels={'real_reviews_location': 'Puntuación de ubicación', 'price_eur': 'Precio en euros'}
+                            , color='color_condition'
+                            , color_discrete_map={'Mayor o igual a 4.9': '#FF3131', 'Menor a 4.9': '#36454F'} # Mapeo de colores
+                            , hover_data={"color_condition": False})  # Ocultamos la información de color_condition en el hover
+        fig.update_layout(showlegend=False)
+        st.plotly_chart(fig, use_container_width=True)
 
-    #     st.markdown("---")
+        st.markdown("---")
 
-    #     # Boxplot con el top 4 vecindarios con más puntuación de ubicación
-    #     df_aux['color'] = df_aux['neighbourhood'].apply(lambda x: "#FF3131" if x in ["Randwick", "Sydney"] else "#36454F") # Destacamos los vecindarios Randwick y Sydney
-    #     # Mostramos un boxplot con el top 4 vecindarios con más puntuación de ubicación, destacando Randwick y Sydney ya que pertenecen a los 4 vecindarios con más propiedades
-    #     fig = px.box(df_aux, x="real_reviews_location", y="neighbourhood"
-    #                         , range_x=[4,5]
-    #                         , title="Top 4 vecindarios con más puntuación de ubicación"
-    #                         , labels={'real_reviews_location': 'Puntuación de ubicación', 'price_eur': 'Precio en euros', "neighbourhood": "Vecindario"}
-    #                         , orientation="h"
-    #                         , color='color'
-    #                         , color_discrete_map="identity")
-    #     fig.update_yaxes(categoryorder='total descending', range=(-.5, 3.5))
-    #     fig.update_traces(width=0.7, boxmean=True)
-    #     st.plotly_chart(fig, use_container_width=True)
-    #     df_aux.drop(columns=["color"], inplace=True)
+        # Boxplot con el top 4 vecindarios con más puntuación de ubicación
+        df_aux['color'] = df_aux['neighbourhood'].apply(lambda x: "#FF3131" if x in ["Randwick", "Sydney"] else "#36454F") # Destacamos los vecindarios Randwick y Sydney
+        # Mostramos un boxplot con el top 4 vecindarios con más puntuación de ubicación, destacando Randwick y Sydney ya que pertenecen a los 4 vecindarios con más propiedades
+        fig = px.box(df_aux, x="real_reviews_location", y="neighbourhood"
+                            , range_x=[4,5]
+                            , title="Top 4 vecindarios con más puntuación de ubicación"
+                            , labels={'real_reviews_location': 'Puntuación de ubicación', 'price_eur': 'Precio en euros', "neighbourhood": "Vecindario"}
+                            , orientation="h"
+                            , color='color'
+                            , color_discrete_map="identity")
+        fig.update_yaxes(categoryorder='total descending', range=(-.5, 3.5))
+        fig.update_traces(width=0.7, boxmean=True)
+        st.plotly_chart(fig, use_container_width=True)
+        df_aux.drop(columns=["color"], inplace=True)
 
 def rating():
     codigo_iframe = '''<iframe title="Panel_Rating_AirBnB" width="1320" height="1240"
