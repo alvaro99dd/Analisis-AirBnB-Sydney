@@ -3,7 +3,6 @@ plotly
 numpy
 seaborn
 pandas
-pandas-datareader
 matplotlib
 folium
 streamlit_folium
