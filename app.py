@@ -67,12 +67,13 @@ elif pestaña == "Datos usados":
             st.subheader("Datos Preprocesados")
             st.dataframe(listings)
     with tabsInicio[1]:
-        @st.cache_data
+        # @st.cache_data
         def create_map(locations):
             map1 = folium.Map(location=[-33.86785, 151.20732], zoom_start=11.5)
             FastMarkerCluster(data=locations).add_to(map1)
             return map1
-
+        # st.cache_data(create_map)
+        
         # Creamos una lista con las latitudes y longitudes de las propiedades en Sydney
         lats2018 = listings['latitude'].tolist()
         lons2018 = listings['longitude'].tolist()
@@ -83,6 +84,8 @@ elif pestaña == "Datos usados":
 
         # Mostramos el mapa en Streamlit
         st_folium(map1, width='100%')
+        
+        # st.image("https://www.sydney.com/sites/sydney/files/styles/full_height_hero/public/2019-09/hero_sydney_skyline_2019_credit_destination_nsw.jpg?itok=3Z9J9Q9Y", width=1320)
 
 elif pestaña == "Importancia del Precio":
     tabsPrecio = st.tabs(["Según propiedad", "Según valoraciones", "Según comodidades", "Según barrio"])
