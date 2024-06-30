@@ -13,7 +13,7 @@ from streamlit.components.v1 import html
 st.set_page_config(page_title="Airbnb Sydney", page_icon=":house:",layout="wide") #configuración de la página
 
 #Cargar datos
-listings = pd.read_csv("https://raw.githubusercontent.com/alvaro99dd/Analisis-AirBnB-Sydney/main/Recursos/listings_clean.csv")
+listings = pd.read_csv("https://raw.githubusercontent.com/alvaro99dd/Analisis-AirBnB-Sydney/main/Recursos/listings_clean.zip")
 
 #Funciones
 #Función para limpiar los outliers
@@ -253,7 +253,7 @@ elif pestaña == "Importancia del Vecindario":
         fig.update_layout(legend=dict(orientation="h", y=1.06, x=0, xanchor='left'))
         st.plotly_chart(fig, use_container_width=True)
     with tabsVecindario[2]:
-        calendar_data = pd.read_csv("recursos/calendar.csv", low_memory=False)
+        calendar_data = pd.read_csv("https://raw.githubusercontent.com/alvaro99dd/Analisis-AirBnB-Sydney/main/Recursos/calendar.zip", low_memory=False)
         calendar_data = pd.merge(listings, calendar_data, left_on="id", right_on="listing_id", how="left")
         calendar_data = calendar_data.groupby(["neighbourhood", "date"])["available"].value_counts().unstack()
         calendar_data["available_ratio"] = np.round(calendar_data["t"] / (calendar_data["t"] + calendar_data["f"]) * 100, 2)
