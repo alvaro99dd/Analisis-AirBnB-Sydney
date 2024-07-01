@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import matplotlib.pyplot as plt
+import pydeck as pdk
 
 import folium
 from folium.plugins import FastMarkerCluster
@@ -62,7 +63,7 @@ def inicio():
                 st.image("https://www.eleconomista.es/finanzas-personales/wp-content/uploads/2023/12/Untitled-1-1.png", width=300)
 
 def datos_usados():
-    tabsInicio = st.tabs(["Datos Cargados"])
+    tabsInicio = st.tabs(["Datos Cargados", "Mapa Sydney"])
     with tabsInicio[0]:
         filtrotabla = st.checkbox("Mostrar datos analizados", value=False)
         if filtrotabla:
@@ -74,6 +75,33 @@ def datos_usados():
             
             st.subheader("Datos Preprocesados")
             st.dataframe(listings)
+    with tabsInicio[1]:
+        layer = pdk.Layer(
+            'ScatterplotLayer',
+            data=listings,
+            get_position='[longitude, latitude]',
+            get_radius=100,
+            get_color='[200, 30, 0, 160]',
+            pickable=True
+        )
+
+        # Define the view state
+        view_state = pdk.ViewState(
+            latitude=-33.86785,
+            longitude=151.20732,
+            zoom=11.5,
+            pitch=50
+        )
+
+        # Create the pydeck Deck object
+        deck = pdk.Deck(
+            layers=[layer],
+            initial_view_state=view_state,
+            tooltip={"text": "{latitude}, {longitude}"}
+)
+
+    # Display the deck in Streamlit
+        st.pydeck_chart(deck)
 
 def precio():
     tabsPrecio = st.tabs(["Según propiedad", "Según valoraciones", "Según comodidades", "Según barrio"])
